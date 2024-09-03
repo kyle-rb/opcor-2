@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "start": "deno run -A --watch local-server.ts"
+  },
+  "fmt": {
+    "options": {
+      "singleQuote": true
+    }
+  }
+}

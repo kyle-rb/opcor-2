@@ -1,0 +1,125 @@
+html {
+  font-family: helvetica, sans-serif;
+  font-size: 20pt;
+  background: #ececfc;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: .2em 0;
+}
+
+button,
+input,
+select {
+  font-size: inherit;
+  border: 1px solid #181818;
+  border-radius: 4px;
+}
+
+select {
+  margin-right: 8px;
+}
+
+/* search page */
+input.search {
+  width: 60%;
+}
+
+.series-card {
+  display: inline-block;
+  width: 240px;
+  min-height: 440px;
+  margin: 8px;
+  border-radius: 16px;
+  background: #281820;
+  color: #ececfc;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow: 2px 2px 6px #000000;
+  transition: transform .1s ease-in-out;
+}
+
+.series-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 10px #000000;
+}
+
+.series-card:active {
+  box-shadow: 0px 0px 1px #000000;
+}
+
+.series-card img {
+  width: 100%;
+}
+
+/* player page */
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.series-title {
+  font-size: 24pt;
+  overflow-x: auto;
+}
+
+button.next,
+button.prev {
+  display: inline-block;
+  margin: 8px 0;
+}
+
+.sidebar-container {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.sidebar-container>aside {
+  box-sizing: border-box;
+  width: 320px;
+  height: 100%;
+  padding: 0 16px;
+  border-inline-start: 1px solid #303030;
+}
+
+.sidebar-container>aside {
+  display: none;
+}
+
+.sidebar-container>input[type=checkbox]:checked~aside {
+  display: block;
+}
+
+.sidebar-container>input[type=checkbox] {
+  display: none;
+}
+
+.sidebar-container>label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 24px;
+  background: #c0c0c0;
+  border-radius: 2px;
+  opacity: .4;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.sidebar-container>label svg {
+  width: 100%;
+}

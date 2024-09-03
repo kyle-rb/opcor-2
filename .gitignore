@@ -1,0 +1,5 @@
+# Opcor-specific config
+config.json
+
+# Cloudflare Workers deployment config
+wrangler.toml
