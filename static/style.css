@@ -157,11 +157,11 @@ button.prev {
 }
 
 .sidebar-container>aside {
+  flex: 0 0 256px;
   box-sizing: border-box;
-  width: 320px;
   height: 100%;
   padding: 0 16px;
-  border-inline-start: 1px solid #303030;
+  border-inline-start: 1px solid #202020;
 }
 
 .sidebar-container>aside {

@@ -154,11 +154,6 @@
   "workspace": {
     "dependencies": [
       "jsr:@oak/oak@^16.1.0"
-    ],
-    "packageJson": {
-      "dependencies": [
-        "npm:@jsr/oak__oak@^16.1.0"
-      ]
-    }
+    ]
   }
 }
