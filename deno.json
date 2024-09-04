@@ -3,8 +3,11 @@
     "start": "deno run -A --watch local-server.ts"
   },
   "fmt": {
-    "options": {
-      "singleQuote": true
-    }
+    "singleQuote": true,
+    "lineWidth": 100,
+    "indentWidth": 2
+  },
+  "imports": {
+    "@oak/oak": "jsr:@oak/oak@^16.1.0"
   }
 }

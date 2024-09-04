@@ -1,14 +1,21 @@
-import { Application, Router } from 'https://deno.land/x/oak@v16.1.0/mod.ts';
-import configFile from './config.json' with { type: 'json' };
+import { Application } from '@oak/oak/application';
+import { Router } from '@oak/oak/router';
+// import configFile from './config.json' with { type: 'json' };
 
+const decoder = new TextDecoder('utf-8');
+const configFile = JSON.parse(decoder.decode(Deno.readFileSync('./config.json')));
 const tmdbApiToken = configFile.tmdbApiToken;
 const streamingHost = configFile.streamingProviderHostname;
 
-const clientCss = await Deno.readTextFile('./style.css');
-const clientJs = await Deno.readTextFile('./client.js');
-const menuSvg = await Deno.readTextFile('./menu.svg');
-
 const router = new Router();
+router.get('/static/:file', async (ctx) => {
+  await ctx.send({ root: '.' });
+});
+router.get('/robots.txt', (ctx) => {
+  ctx.response.body = 'User-agent: *\nDisallow: /';
+  ctx.response.status = 200;
+  ctx.response.type = 'text/plain';
+});
 router.get('/', (ctx) => {
   ctx.response.body = searchPage();
   ctx.response.status = 200;
@@ -53,11 +60,11 @@ router.get('/play/:id', async (ctx) => {
         window.streamingHost = '${streamingHost}';
         window.tmdbData = ${JSON.stringify(tmdbData)};
       </script>
-      <script>${clientJs}</script>
+      <script src="/static/client.js"></script>
       <div class="sidebar-container">
         <iframe id="video-player" allowfullscreen></iframe>
-        <input type="checkbox" checked id="sidebar-toggle">
-        <label for="sidebar-toggle">${menuSvg}</label>
+        <input type="checkbox" checked id="sidebar-toggle" class="visually-hidden">
+        <label for="sidebar-toggle"><img src="/static/menu.svg" alt="open/close sidebar"></label>
         <aside id="sidebar"></aside>
       </div>
   `,
@@ -76,7 +83,8 @@ function page(title: string, content: string): string {
     <html lang="en">
       <head>
         <title>${title}</title>
-        <style>${clientCss}</style>
+        <link rel="stylesheet" href="/static/style.css">
+        <link rel="icon" href="/static/opcor-2-icon.png">
       </head>
       <body>
         ${content}
@@ -85,10 +93,14 @@ function page(title: string, content: string): string {
   `;
 }
 
-function searchPage(
-  query = '',
-  results?: { id: number; name: string; poster_path: string }[],
-): string {
+type TmdbResult = {
+  id: number;
+  name: string;
+  poster_path: string;
+  first_air_date?: string;
+};
+
+function searchPage(query = '', results?: TmdbResult[]): string {
   let resultsContent;
   if (!results) {
     resultsContent = '';
@@ -97,12 +109,25 @@ function searchPage(
       <p>No results found</p>
     `;
   } else {
-    resultsContent = results.map((result) => `
+    resultsContent = results.map((result) => {
+      let name = result.name;
+      if (result.first_air_date) {
+        const year = result.first_air_date.split('-')[0];
+        if (year) {
+          name += ` (${year})`;
+        }
+      }
+
+      const poster = result.poster_path
+        ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${result.poster_path}`
+        : '/static/placeholder.svg';
+      return `
         <a href="/play/${result.id}" class="series-card">
-          <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2${result.poster_path}">
-          ${result.name}
+          <img src="${poster}" alt="">
+          ${name}
         </a>
-      `).join('');
+      `;
+    }).join('');
   }
   let title = 'search';
   if (query) {
@@ -112,12 +137,23 @@ function searchPage(
   return page(
     title,
     `
-      <h1>search</h1>
-      <form action="/search" method="get">
-        <input type="text" name="q" placeholder="breaking bad or something" value="${query}" class="search">
-        <button type="submit">search</button>
-      </form>
-      ${resultsContent}
+      <div class="search-container">
+        <h1 class="logo-marquee small">
+          <img src="/static/opcor-2-logo.svg" alt="Opcor">
+          <img src="/static/opcor-2-logo.svg" alt="">
+        </h1>
+        <form action="/search" method="get">
+          <input type="text"
+              name="q"
+              placeholder="breaking bad or something"
+              value="${query}"
+              class="search">
+          <button type="submit">search</button>
+        </form>
+        <div class="results">
+          ${resultsContent}
+        </div>
+      </div>
     `,
   );
 }
@@ -148,8 +184,8 @@ function buildUrl(
   path: string,
   queryParams: Record<string, string>,
 ): string {
-  const query = Object.keys(queryParams).map((key: string) =>
-    `${key}=${queryParams[key]}`
-  ).join('&');
+  const query = Object.keys(queryParams).map((key: string) => `${key}=${queryParams[key]}`).join(
+    '&',
+  );
   return `https://${domain}/${path}?${query}`;
 }

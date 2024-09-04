@@ -18,13 +18,15 @@ function init() {
 
   const title = document.createElement('h1');
   title.classList.add('series-title');
-  title.innerText = tmdbData.name;
+  title.textContent = tmdbData.name;
   sidebar.appendChild(title);
 
   const tmdbId = tmdbData.id;
   const seasons = {};
   for (const season of tmdbData.seasons) {
-    seasons[season.season_number] = season;
+    if (season.season_number !== 0) {
+      seasons[season.season_number] = season;
+    }
   }
 
   const seasonPicker = document.createElement('select');
@@ -69,12 +71,12 @@ function init() {
 
   const nextButton = document.createElement('button');
   nextButton.classList.add('next');
-  nextButton.innerText = 'next ->';
+  nextButton.textContent = 'next ->';
   sidebar.appendChild(nextButton);
   nextButton.addEventListener('click', () => {
     const season = +seasonPicker.value;
     const episode = +episodePicker.value;
-    
+
     // If last episode (1-indexed)
     if (episode === seasons[season].episode_count) {
       if (seasons[season + 1]) {
@@ -89,12 +91,22 @@ function init() {
     }
     onEpisodeChange();
   });
+
+  const searchLink = document.createElement('a');
+  searchLink.href = '/';
+  const footer = document.createElement('footer');
+  footer.appendChild(searchLink);
+  footer.appendChild(document.createTextNode(`
+    all streams are hosted by ${streamingHost}.
+    no copyrighted material is stored on opcor servers.
+  `));
+  sidebar.appendChild(footer);
 }
 
 function option(value, label) {
   const option = document.createElement('option');
   option.value = value;
-  option.innerText = label;
+  option.textContent = label;
   return option;
 }
 
@@ -113,7 +125,7 @@ function loadProgress(tmdbId) {
       // Progress data hasn't been saved yet.
     }
   }
-  return {season, episode};
+  return { season, episode };
 }
 
 function saveProgress(tmdbId, season, episode) {
@@ -125,6 +137,6 @@ function saveProgress(tmdbId, season, episode) {
     progressData = {};
   }
 
-  progressData[tmdbId] = {season, episode, timestamp: Date.now()};
+  progressData[tmdbId] = { season, episode, timestamp: Date.now() };
   localStorage.setItem(progressDataKey, JSON.stringify(progressData));
 }
