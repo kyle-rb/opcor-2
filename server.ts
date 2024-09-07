@@ -1,9 +1,10 @@
 import { Application } from '@oak/oak/application';
 import { Router } from '@oak/oak/router';
-// import configFile from './config.json' with { type: 'json' };
+import configFile from './config.json' with { type: 'json' };
 
-const decoder = new TextDecoder('utf-8');
-const configFile = JSON.parse(decoder.decode(Deno.readFileSync('./config.json')));
+// TODO: allow this to work with non-Deno environments
+// const decoder = new TextDecoder('utf-8');
+// const configFile = JSON.parse(decoder.decode(Deno.readFileSync('./config.json')));
 const tmdbApiToken = configFile.tmdbApiToken;
 const streamingHost = configFile.streamingProviderHostname;
 
@@ -73,9 +74,12 @@ router.get('/play/:id', async (ctx) => {
   ctx.response.type = 'text/html';
 });
 
-export const app = new Application();
+const app = new Application();
 app.use(router.routes());
 app.use(router.allowedMethods());
+await app.listen({ port: 8000 });
+
+//// Helper functions
 
 function page(title: string, content: string): string {
   return `

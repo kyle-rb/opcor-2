@@ -24,6 +24,10 @@ select {
   background: var(--fg-alt-color);
 }
 
+input {
+  background: var(--fg-color);
+}
+
 h1,
 h2,
 h3,

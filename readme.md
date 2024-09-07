@@ -33,7 +33,7 @@ series metadata) and a host URL that can redirect to streams.
 deno task start
 ```
 
-and access the app at <http://localhost:8000> (configured in `local-server.ts`).
+and access the app at <http://localhost:8000> (configured in `server.ts`).
 
 ## License
 

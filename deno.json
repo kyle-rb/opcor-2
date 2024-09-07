@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "start": "deno run -A --watch local-server.ts"
+    "start": "deno run --allow-net --allow-read --watch server.ts"
   },
   "fmt": {
     "singleQuote": true,
