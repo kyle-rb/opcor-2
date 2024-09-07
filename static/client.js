@@ -99,6 +99,7 @@ function init() {
   footer.appendChild(document.createTextNode(`
     all streams are hosted by ${streamingHost}.
     no copyrighted material is stored on opcor servers.
+    adblocker recommended.
   `));
   sidebar.appendChild(footer);
 }
