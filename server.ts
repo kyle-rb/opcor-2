@@ -88,6 +88,7 @@ function page(title: string, content: string): string {
     <!DOCTYPE html>
     <html lang="en">
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${title}</title>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="icon" href="/static/opcor-2-icon.png">
