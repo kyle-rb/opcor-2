@@ -16,15 +16,16 @@ git clone https://github.com/kyle-rb/opcor-2.git
 
 ### Configure
 
-Create a `config.json` file with a
-[TMDB API token](https://developer.themoviedb.org/reference/intro/getting-started) (for searches and
-series metadata) and a host URL that can redirect to streams.
+Set the following environment variables to provide settings:
 
-```json
-{
-  "tmdbApiToken": "xxxxx.yyyyy.zzzzz",
-  "streamingProviderHostname": "example.com"
-}
+- `OPCOR_TMDB_TOKEN`:
+  [TMDB API token](https://developer.themoviedb.org/reference/intro/getting-started) (for searches
+  and series metadata)
+- `OPCOR_HOSTNAME`: a host URL that can redirect to streams.
+
+```sh
+OPCOR_TMDB_TOKEN="xxxxx.yyyyy.zzzzz",
+OPCOR_HOSTNAME="example.com"
 ```
 
 ### Run

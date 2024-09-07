@@ -1,12 +1,14 @@
 import { Application } from '@oak/oak/application';
 import { Router } from '@oak/oak/router';
-import configFile from './config.json' with { type: 'json' };
 
-// TODO: allow this to work with non-Deno environments
-// const decoder = new TextDecoder('utf-8');
-// const configFile = JSON.parse(decoder.decode(Deno.readFileSync('./config.json')));
-const tmdbApiToken = configFile.tmdbApiToken;
-const streamingHost = configFile.streamingProviderHostname;
+const streamingHost = Deno.env.get('OPCOR_HOSTNAME');
+const tmdbApiToken = Deno.env.get('OPCOR_TMDB_TOKEN');
+
+if (!tmdbApiToken) {
+  throw new Error('OPCOR_TMDB_TOKEN is not set');
+} else if (!streamingHost) {
+  throw new Error('OPCOR_HOSTNAME is not set');
+}
 
 const router = new Router();
 router.get('/static/:file', async (ctx) => {
