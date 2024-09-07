@@ -32,7 +32,7 @@ router.get('/search', async (ctx) => {
     return;
   }
   const query = params.get('q')!;
-  const response = await tmdbFetch('3/search/tv', {
+  const response = await tmdbFetch('3/search/multi', {
     'query': encodeURIComponent(query),
   });
   const results = response.results;
@@ -50,30 +50,52 @@ router.get('/search', async (ctx) => {
   ctx.response.status = 200;
   ctx.response.type = 'text/html';
 });
-router.get('/play/:id', async (ctx) => {
+router.get('/tv/:id', async (ctx) => {
   const id = ctx.params.id;
-
   const tmdbData = await tmdbFetch(`3/tv/${id}`);
   const title = tmdbData.name;
 
   ctx.response.body = page(
     `stream ${title}`,
     `
-      <script>
-        window.streamingHost = '${streamingHost}';
-        window.tmdbData = ${JSON.stringify(tmdbData)};
-      </script>
-      <script src="/static/client.js"></script>
-      <div class="sidebar-container">
-        <iframe id="video-player" allowfullscreen></iframe>
-        <input type="checkbox" checked id="sidebar-toggle" class="visually-hidden">
-        <label for="sidebar-toggle"><img src="/static/menu.svg" alt="open/close sidebar"></label>
-        <aside id="sidebar"></aside>
-      </div>
-  `,
+    <script>
+      window.streamingHost = '${streamingHost}';
+      window.tmdbData = ${JSON.stringify(tmdbData)};
+    </script>
+    <script src="/static/client.js"></script>
+    <div class="sidebar-container">
+      <iframe id="video-player" allowfullscreen></iframe>
+      <input type="checkbox" checked id="sidebar-toggle" class="visually-hidden">
+      <label for="sidebar-toggle"><img src="/static/menu.svg" alt="open/close sidebar"></label>
+      <aside id="sidebar"></aside>
+    </div>
+    `,
   );
   ctx.response.status = 200;
   ctx.response.type = 'text/html';
+});
+router.get('/movie/:id', async (ctx) => {
+  const id = ctx.params.id;
+  const tmdbData = await tmdbFetch(`3/movie/${id}`);
+  const title = tmdbData.title;
+
+  ctx.response.body = page(
+    `stream ${title}`,
+    `
+    <div class="sidebar-container">
+      <iframe
+        id="video-player"
+        src="https://${streamingHost}/embed/movie?tmdb=${id}"
+        allowfullscreen>
+      </iframe>
+      <input type="checkbox" checked id="sidebar-toggle" class="visually-hidden">
+      <label for="sidebar-toggle"><img src="/static/menu.svg" alt="open/close sidebar"></label>
+      <aside id="sidebar">
+        <h1 class="series-title">${tmdbData.title}</h1>
+      </aside>
+    </div>
+    `,
+  );
 });
 
 const app = new Application();
@@ -102,9 +124,12 @@ function page(title: string, content: string): string {
 
 type TmdbResult = {
   id: number;
-  name: string;
+  name?: string;
+  title?: string;
+  media_type: string;
   poster_path: string;
   first_air_date?: string;
+  release_date?: string;
 };
 
 function searchPage(query = '', results?: TmdbResult[]): string {
@@ -117,9 +142,28 @@ function searchPage(query = '', results?: TmdbResult[]): string {
     `;
   } else {
     resultsContent = results.map((result) => {
-      let name = result.name;
-      if (result.first_air_date) {
-        const year = result.first_air_date.split('-')[0];
+      let title: string;
+      let releaseDate: string | undefined;
+      let icon: string;
+      let iconAlt: string;
+
+      if (result.media_type === 'tv') {
+        title = result.name!;
+        releaseDate = result.first_air_date;
+        icon = 'tv.svg';
+        iconAlt = 'TV show';
+      } else if (result.media_type === 'movie') {
+        title = result.title!;
+        releaseDate = result.release_date;
+        icon = 'movie.svg';
+        iconAlt = 'Movie';
+      } else {
+        // Unknown/other type; skip this search result
+        return '';
+      }
+
+      if (releaseDate) {
+        const year = releaseDate.split('-')[0];
         if (year) {
           name += ` (${year})`;
         }
@@ -128,10 +172,12 @@ function searchPage(query = '', results?: TmdbResult[]): string {
       const poster = result.poster_path
         ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${result.poster_path}`
         : '/static/placeholder.svg';
+
       return `
-        <a href="/play/${result.id}" class="series-card">
-          <img src="${poster}" alt="">
-          ${name}
+        <a href="/${result.media_type}/${result.id}" class="series-card" title="${title}">
+          <img src="${poster}" alt="" class="poster">
+          <div class="title">${title}</div>
+          <img src="/static/${icon}" alt="${iconAlt}" class="icon">
         </a>
       `;
     }).join('');

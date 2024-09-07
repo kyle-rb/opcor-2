@@ -21,7 +21,7 @@ function init() {
   title.textContent = tmdbData.name;
   sidebar.appendChild(title);
 
-  const tmdbId = tmdbData.id;
+  // Build season number=>info map.
   const seasons = {};
   for (const season of tmdbData.seasons) {
     if (season.season_number !== 0) {
@@ -29,6 +29,7 @@ function init() {
     }
   }
 
+  const tmdbId = tmdbData.id;
   const seasonPicker = document.createElement('select');
   seasonPicker.classList.add('season-picker');
   for (const season of Object.values(seasons)) {

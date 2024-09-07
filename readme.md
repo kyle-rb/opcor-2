@@ -38,15 +38,22 @@ and access the app at <http://localhost:8000> (configured in `server.ts`).
 
 ## License
 
-[CC0](https://creativecommons.org/public-domain/cc0/); no rights reserved. Do whatever you want,
-with or without attribution.
+### Icons
+
+`menu.svg`, `tv.svg`, and `movie.svg` are from [Google Fonts](https://fonts.google.com/icons) via
+the [Apache License](https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file).
+
+### All other assets
+
+All other assets and code are committed to the public domain via the
+[CC0](https://creativecommons.org/public-domain/cc0/) license; no rights reserved. Do whatever you
+want, with or without attribution.
 
 ## TODO
 
 - features
   - prev button
   - history in search/home page
-  - movies
   - episode info
 - cleanup
   - Lit + TypeScript client
