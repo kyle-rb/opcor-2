@@ -38,10 +38,16 @@ and access the app at <http://localhost:8000> (configured in `server.ts`).
 
 ## License
 
+### Lit
+
+[Lit](https://lit.dev/) is inlined under `/static/lit/` (for now, because I don't want to add a
+frontend build step) and is [BSD licensed](https://github.com/lit/lit/?tab=BSD-3-Clause-1-ov-file).
+
 ### Icons
 
-`menu.svg`, `tv.svg`, and `movie.svg` are from [Google Fonts](https://fonts.google.com/icons) via
-the [Apache License](https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file).
+`menu.svg`, `tv.svg`, `movie.svg`, and `home.svg` are from
+[Google Fonts](https://fonts.google.com/icons) via the
+[Apache License](https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file).
 
 ### All other assets
 

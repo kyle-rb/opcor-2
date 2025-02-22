@@ -13,6 +13,7 @@ html {
 
 body {
   margin: 0;
+  height: 100%;
 }
 
 button,
@@ -113,7 +114,7 @@ input.search {
   display: inline-block;
   position: relative;
   width: 240px;
-  min-height: 440px;
+  height: 440px;
   margin: 8px;
   border-radius: 16px;
   text-align: center;
@@ -182,21 +183,54 @@ button.prev {
 .sidebar-container {
   position: absolute;
   display: flex;
+  justify-content: space-between;
   width: 100%;
   height: 100%;
 }
 
-.sidebar-container>aside {
-  flex: 0 0 256px;
-  box-sizing: border-box;
-  height: 100%;
-  padding: 0 16px;
-  border-inline-start: 1px solid #202020;
+.sidebar-container>:not(aside) {
+  flex-grow: 1;
+  overflow-y: scroll;
 }
 
 .sidebar-container>aside {
   display: none;
   position: relative;
+  flex: 0 0 320px;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0 16px;
+  border: 0 solid #202020;
+  border-left-width: 1px;
+  overflow-y: scroll;
+}
+
+.history {
+  width: 100%;
+  overflow-y: scroll;
+}
+
+@media screen and (max-device-width: 500px) {
+  .sidebar-container {
+    flex-direction: column;
+  }
+  .sidebar-container>aside {
+    white-space: nowrap;
+    overflow-y: unset;
+    overflow-x: scroll;
+    border-left-width: 0;
+    border-top-width: 2px;
+  }
+
+  .history {
+    padding: 16px 0;
+    overflow-y: unset;
+    overflow-x: scroll;
+  }
+  .series-card {
+    width: 160px;
+    height: 240px;
+  }
 }
 
 .sidebar-container>input[type=checkbox]:checked~aside {
@@ -211,7 +245,7 @@ button.prev {
   position: absolute;
   top: 0;
   right: 0;
-  width: 40px;
+  width: 56px;
   height: 24px;
   background: #c0c0c0;
   border-radius: 2px;
@@ -234,7 +268,7 @@ button.prev {
   font-size: 8pt;
 }
 
-.sidebar-container>aside a {
+.home-link {
   display: block;
   float: left;
   width: 32px;
@@ -242,7 +276,7 @@ button.prev {
   margin: 4px;
   margin-right: 8px;
   border-radius: 6px;
-  background-image: url('/static/search.svg');
+  background-image: url('/static/img/home.svg');
   background-size: cover;
   background-color: var(--fg-alt-color);
 }

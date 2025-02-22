@@ -112,33 +112,4 @@ function option(value, label) {
   return option;
 }
 
-const progressDataKey = 'progress-data';
-function loadProgress(tmdbId) {
-  let season = 1;
-  let episode = 1;
-  const progressDataString = localStorage.getItem(progressDataKey);
-  if (progressDataString) {
-    try {
-      const data = JSON.parse(progressDataString);
-      const seriesData = data[tmdbId];
-      season = seriesData?.season ?? 1;
-      episode = seriesData?.episode ?? 1;
-    } catch (_) {
-      // Progress data hasn't been saved yet.
-    }
-  }
-  return { season, episode };
-}
 
-function saveProgress(tmdbId, season, episode) {
-  const progressDataString = localStorage.getItem(progressDataKey);
-  let progressData;
-  try {
-    progressData = JSON.parse(progressDataString) ?? {};
-  } catch (_) {
-    progressData = {};
-  }
-
-  progressData[tmdbId] = { season, episode, timestamp: Date.now() };
-  localStorage.setItem(progressDataKey, JSON.stringify(progressData));
-}
