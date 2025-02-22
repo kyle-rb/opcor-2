@@ -190,7 +190,7 @@ button.prev {
 
 .sidebar-container>:not(aside) {
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .sidebar-container>aside {
@@ -202,12 +202,7 @@ button.prev {
   padding: 0 16px;
   border: 0 solid #202020;
   border-left-width: 1px;
-  overflow-y: scroll;
-}
-
-.history {
-  width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .sidebar-container>input[type=checkbox]:checked~aside {
@@ -246,17 +241,14 @@ button.prev {
     overflow-x: scroll;
     border-left-width: 0;
     border-top-width: 2px;
+    padding-top: 16px;
   }
   .sidebar-container>label {
+    position: fixed;
     top: unset;
     bottom: 0;
   }
 
-  .history {
-    padding: 16px 0;
-    overflow-y: unset;
-    overflow-x: scroll;
-  }
   .series-card {
     width: 160px;
     height: 280px;
