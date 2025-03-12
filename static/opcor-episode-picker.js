@@ -78,7 +78,6 @@ class OpcorEpisodePicker extends LitElement {
   }
 
   render() {
-    console.log(this.selectedSeason, this.selectedEpisode);
     const currentSeason =
         this.tmdbData.seasons.find((s) => s.season_number === this.selectedSeason);
     const episodes = Array(currentSeason.episode_count).fill().map((_, i) => i + 1);
@@ -116,6 +115,7 @@ class OpcorEpisodePicker extends LitElement {
 
   onSeasonChange = (event) => {
     this.selectedSeason = +event.target.value;
+    this.selectedEpisode = 1;
     this.updatePlayer();
   }
 
@@ -125,8 +125,9 @@ class OpcorEpisodePicker extends LitElement {
   }
 
   onNextClicked() {
-    // If last episode (1-indexed)
+    // If last episode of the season (1-indexed)
     if (this.selectedEpisode === this.seasonsByNumber[this.selectedSeason].episode_count) {
+      // If next season exists
       if (this.seasonsByNumber[this.selectedSeason + 1]) {
         this.selectedSeason += 1;
         this.selectedEpisode = 1;
