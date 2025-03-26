@@ -108,7 +108,8 @@ function playerPage(tmdbData: TmdbResult, isMovie: boolean) {
         <a href="/" class="home-link"></a>
         all streams are hosted by ${streamingHost}.
         no copyrighted material is stored on opcor servers.
-        adblocker recommended.
+        adblocker recommended. [if you get a blank screen, turn
+	your adblocker off and refresh this page, then on again.]
       </footer>
     `,
   );
@@ -264,6 +265,7 @@ function buildUrl(
 
 //// Tagged template literal tag for HTML strings, currently just processed as a default template.
 //// Replicates the built-in template literal behavior.
+//// The only purpose of this is so VS Code highlights it thinking it's a Lit template.
 function html(strings: TemplateStringsArray, ...values: any[]): string {
   return String.raw({ raw: strings }, ...values);
 }
