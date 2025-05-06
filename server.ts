@@ -109,7 +109,7 @@ function playerPage(tmdbData: TmdbResult, isMovie: boolean) {
         all streams are hosted by ${streamingHost}.
         no copyrighted material is stored on opcor servers.
         adblocker recommended. [if you get a blank screen, turn
-	your adblocker off and refresh this page, then on again.]
+        your adblocker off and refresh this page, then on again.]
       </footer>
     `,
   );
@@ -184,7 +184,7 @@ function searchPage(query = '', results?: TmdbResult[]): string {
       if (releaseDate) {
         const year = releaseDate.split('-')[0];
         if (year) {
-          name += ` (${year})`;
+          title += ` (${year})`;
         }
       }
 

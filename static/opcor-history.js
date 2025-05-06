@@ -1,5 +1,5 @@
-import {LitElement, html, css, repeat} from './lit/lit-all.min.js';
-import {loadHistory} from './storage.js';
+import { LitElement, html, css, repeat } from './lit/lit-all.min.js';
+import { loadHistory } from './storage.js';
 
 class OpcorHistory extends LitElement {
   static get properties() {
@@ -27,7 +27,6 @@ class OpcorHistory extends LitElement {
     let icon;
     let iconAlt;
     let mediaType;
-    console.log(series);
 
     if (series.tmdbData.name) {
       title = series.tmdbData.name;
@@ -53,8 +52,6 @@ class OpcorHistory extends LitElement {
     const poster = series.tmdbData.poster_path
       ? `https://image.tmdb.org/t/p/w600_and_h900_bestv2${series.tmdbData.poster_path}`
       : '/static/img/placeholder.svg';
-
-      console.log('rendering series card: ${title}, ${series.id}');
 
     return html`
       <a href="/${mediaType}/${series.id}" class="series-card" title="${title}">
