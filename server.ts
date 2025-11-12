@@ -92,13 +92,14 @@ function playerPage(tmdbData: TmdbResult, isMovie: boolean) {
     title,
     html`
       <script>
-        window.streamingHost = '${streamingHost}';
-        window.tmdbData = ${JSON.stringify(tmdbData)};
+      window.streamingHost = '${streamingHost}';
+      window.tmdbData = ${JSON.stringify(tmdbData)};
       </script>
       <iframe
         id="video-player"
         src="${iframeSrc}"
-        allowfullscreen>
+        allowfullscreen
+      >
       </iframe>
     `,
     html`
@@ -106,10 +107,9 @@ function playerPage(tmdbData: TmdbResult, isMovie: boolean) {
       ${episodePicker}
       <footer>
         <a href="/" class="home-link"></a>
-        all streams are hosted by ${streamingHost}.
-        no copyrighted material is stored on opcor servers.
-        adblocker recommended. [if you get a blank screen, turn
-        your adblocker off and refresh this page, then on again.]
+        all streams are hosted by ${streamingHost}. no copyrighted material is stored on opcor servers.
+        adblocker recommended. [if you get a blank screen, turn your adblocker off and refresh this page,
+        then on again.]
       </footer>
     `,
   );
@@ -129,7 +129,9 @@ function page(title: string, content: string, sidebarContent: string): string {
       </head>
       <body>
         <div class="sidebar-container">
-          ${content}
+          <main>
+            ${content}
+          </main>
           <input type="checkbox" checked id="sidebar-toggle" class="visually-hidden">
           <label for="sidebar-toggle"><img src="/static/img/menu.svg" alt="open/close sidebar"></label>
           <aside id="sidebar">
@@ -215,11 +217,13 @@ function searchPage(query = '', results?: TmdbResult[]): string {
           <img src="/static/img/opcor-2-logo.svg" alt="">
         </h1>
         <form action="/search" method="get">
-          <input type="text"
-              name="q"
-              placeholder="breaking bad or something"
-              value="${query}"
-              class="search">
+          <input
+            type="text"
+            name="q"
+            placeholder="breaking bad or something"
+            value="${query}"
+            class="search"
+          >
           <button type="submit">search</button>
         </form>
         <div class="results">

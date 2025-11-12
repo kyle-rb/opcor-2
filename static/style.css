@@ -1,6 +1,6 @@
 html {
-  font-family: helvetica, sans-serif;
   font-size: 20pt;
+  font-family: helvetica, sans-serif;
   --fg-color: #dcdcf4;
   --fg-alt-color: #c0b8ec;
   --bg-color: #000000;
@@ -98,7 +98,10 @@ form {
 
 /* search page */
 .search-container {
+  box-sizing: border-box;
+  height: 100%;
   padding: 16px 0 0 16px;
+  overflow-y: auto;
 }
 
 .results {
@@ -160,6 +163,7 @@ input.search {
 
 /* player page */
 iframe {
+  display: block;
   width: 100%;
   height: 100%;
   border: none;
@@ -181,16 +185,16 @@ button.prev {
 }
 
 .sidebar-container {
-  position: absolute;
   display: flex;
   justify-content: space-between;
+  position: absolute;
   width: 100%;
   height: 100%;
 }
 
-.sidebar-container>:not(aside) {
+.sidebar-container>main {
   flex-grow: 1;
-  overflow-y: auto;
+  height: 100%;
 }
 
 .sidebar-container>aside {
@@ -232,16 +236,27 @@ button.prev {
 }
 
 @media screen and (max-device-width: 500px) {
+  html {
+    font-size: 16pt;
+  }
+
+
   .sidebar-container {
     flex-direction: column;
   }
+  .sidebar-container>main {
+    height: 100px; /* token height; will get resized by flex-grow */
+  }
   .sidebar-container>aside {
-    white-space: nowrap;
-    overflow-y: unset;
-    overflow-x: scroll;
+    width: 100%;
     border-left-width: 0;
     border-top-width: 2px;
-    padding-top: 16px;
+    padding-top: 12px;
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+  .sidebar-container>aside>opcor-history {
+    white-space: nowrap;
   }
   .sidebar-container>label {
     position: fixed;
@@ -250,8 +265,9 @@ button.prev {
   }
 
   .series-card {
-    width: 160px;
-    height: 280px;
+    width: 128px;
+    height: 240px;
+    font-size: .8em;
   }
 }
 
