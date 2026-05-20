@@ -59,9 +59,9 @@ class OpcorEpisodePicker extends LitElement {
 
     if (!(this.tmdbData?.seasons && this.streamingHost && this.iframe)) {
       console.error('could not find required elements', {
-        tmdbData,
-        iframe,
-        sidebar,
+        tmdbData: this.tmdbData,
+        iframe: this.iframe,
+        sidebar: this.sidebar,
       });
       return;
     }
@@ -78,8 +78,8 @@ class OpcorEpisodePicker extends LitElement {
     this.selectedEpisode = progress.episode ?? 1;
 
     this.updatePlayer();
-    if (this.tmdbData) {
-      saveTmdbData(this.tmdbData);
+    if (globalThis.tmdbData) {
+      saveTmdbData(globalThis.tmdbData);
     }
   }
 

@@ -34,7 +34,7 @@ export function saveProgress(tmdbId, season, episode) {
 }
 
 export function saveTmdbData(tmdbData) {
-  if (tmbdData) {
+  if (tmdbData) {
     localStorage.setItem(`${tmdbDataKeyPrefix}${tmdbData.id}`, JSON.stringify(tmdbData));
   }
 }
