@@ -34,9 +34,14 @@ export function saveProgress(tmdbId, season, episode) {
 }
 
 export function saveTmdbData(tmdbData) {
-  localStorage.setItem(tmdbDataKeyPrefix + tmdbData.id, JSON.stringify(tmdbData));
+  if (tmbdData) {
+    localStorage.setItem(`${tmdbDataKeyPrefix}${tmdbData.id}`, JSON.stringify(tmdbData));
+  }
 }
 
+export function loadTmdbData(id) {
+  return JSON.parse(localStorage.getItem(`${tmdbDataKeyPrefix}${id}`));
+}
 
 //// Returns an array of items containing ID, episode progress, and tmdbData, most-recent-first.
 export function loadHistory() {
@@ -47,14 +52,14 @@ export function loadHistory() {
     const data = JSON.parse(progressDataString);
     const ids = Object.keys(data);
     const history = ids.map((id) => {
-      const tmdbData = JSON.parse(localStorage.getItem(`${tmdbDataKeyPrefix}${id}`));
+      const tmdbData = loadTmdbData(id);
       if (!tmdbData) return null;
 
       return {
         id: id,
         tmdbData: tmdbData,
         season: data[id].season,
-        episode: data[id].episode, 
+        episode: data[id].episode,
         timestamp: data[id].timestamp,
       };
     }).filter((h) => !!h);

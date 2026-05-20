@@ -1,12 +1,12 @@
-import {} from './lit/lit-core.min.js';
-import {LitElement, html, css, repeat, when} from './lit/lit-all.min.js';
-import {loadProgress, saveProgress, saveTmdbData} from './storage.js';
+import { } from './lit/lit-core.min.js';
+import { LitElement, html, css, repeat, when } from './lit/lit-all.min.js';
+import { loadProgress, loadTmdbData, saveProgress, saveTmdbData } from './storage.js';
 
 class OpcorEpisodePicker extends LitElement {
   static get properties() {
     return {
-      selectedSeason: {type: Number},
-      selectedEpisode: {type: Number},
+      selectedSeason: { type: Number },
+      selectedEpisode: { type: Number },
     };
   }
 
@@ -49,7 +49,11 @@ class OpcorEpisodePicker extends LitElement {
   constructor() {
     super();
 
-    this.tmdbData = globalThis.tmdbData;
+    if (globalThis.tmdbData) {
+      this.tmdbData = globalThis.tmdbData;
+    } else {
+      this.tmdbData = loadTmdbData(globalThis.tmdbId);
+    }
     this.streamingHost = globalThis.streamingHost;
     this.iframe = document.getElementById('video-player');
 
@@ -69,17 +73,19 @@ class OpcorEpisodePicker extends LitElement {
       }
     }
 
-    const progress = loadProgress(this.tmdbData.id);
+    const progress = loadProgress(globalThis.tmdbId);
     this.selectedSeason = progress.season ?? 1;
     this.selectedEpisode = progress.episode ?? 1;
 
     this.updatePlayer();
-    saveTmdbData(this.tmdbData);
+    if (this.tmdbData) {
+      saveTmdbData(this.tmdbData);
+    }
   }
 
   render() {
     const currentSeason =
-        this.tmdbData.seasons.find((s) => s.season_number === this.selectedSeason);
+      this.tmdbData.seasons.find((s) => s.season_number === this.selectedSeason);
     const episodes = Array(currentSeason.episode_count).fill().map((_, i) => i + 1);
 
     return html`
@@ -87,9 +93,9 @@ class OpcorEpisodePicker extends LitElement {
           class="season-picker"
           @change=${this.onSeasonChange}>
         ${repeat(
-            this.tmdbData.seasons,
-            (s) => s.season_number,
-            (s) => when(s.season_number > 0, () => html`
+      this.tmdbData.seasons,
+      (s) => s.season_number,
+      (s) => when(s.season_number > 0, () => html`
           <option value=${s.season_number} ?selected=${s.season_number === this.selectedSeason}>
             ${s.name}
           </option>
@@ -100,9 +106,9 @@ class OpcorEpisodePicker extends LitElement {
           class="episode-picker"
           @change=${this.onEpisodeChange}>
         ${repeat(
-            episodes,
-            (e) => e,
-            (e) => html`
+        episodes,
+        (e) => e,
+        (e) => html`
           <option value=${e} ?selected=${e === this.selectedEpisode}>${e}</option>
         `)}
       </select>
@@ -143,14 +149,14 @@ class OpcorEpisodePicker extends LitElement {
 
   updatePlayer = () => {
     const embedPath = `https://${streamingHost}/embed/tv`;
-    const id = this.tmdbData.id;
+    const id = globalThis.tmdbId;
     const season = this.selectedSeason;
     const episode = this.selectedEpisode;
     this.iframe.src = `${embedPath}?tmdb=${id}&season=${season}&episode=${episode}`;
     // this.iframe.src = `data:text/html,season=${season}, episode=${episode}`;
     this.iframe.style.background = 'white';
 
-    saveProgress(this.tmdbData.id, this.selectedSeason, this.selectedEpisode);
+    saveProgress(id, this.selectedSeason, this.selectedEpisode);
   };
 }
 

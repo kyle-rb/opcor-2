@@ -52,18 +52,18 @@ router.get('/search', async (ctx) => {
   ctx.response.type = 'text/html';
 });
 router.get('/tv/:id', async (ctx) => {
-  const id = ctx.params.id;
+  const id = Number.parseInt(ctx.params.id);
   const tmdbData = await tmdbFetch(`3/tv/${id}`);
 
-  ctx.response.body = playerPage(tmdbData, false);
+  ctx.response.body = playerPage(id, tmdbData, false);
   ctx.response.status = 200;
   ctx.response.type = 'text/html';
 });
 router.get('/movie/:id', async (ctx) => {
-  const id = ctx.params.id;
+  const id = Number.parseInt(ctx.params.id);
   const tmdbData = await tmdbFetch(`3/movie/${id}`);
 
-  ctx.response.body = playerPage(tmdbData, true);
+  ctx.response.body = playerPage(id, tmdbData, true);
   ctx.response.status = 200;
   ctx.response.type = 'text/html';
 });
@@ -75,16 +75,15 @@ await app.listen({ port: 8000 });
 
 //// Helper functions
 
-function playerPage(tmdbData: TmdbResult, isMovie: boolean) {
+function playerPage(id: number, tmdbData: TmdbResult | null, isMovie: boolean): string {
   let title = '';
   let iframeSrc = '';
   let episodePicker = '';
   if (isMovie) {
-    title = tmdbData.title ?? '';
-    iframeSrc = `https://${streamingHost}/embed/movie/${tmdbData.id}`;
+    title = tmdbData?.title ?? '';
+    iframeSrc = `https://${streamingHost}/embed/movie/${id}`;
   } else {
-    title = tmdbData.name ?? '';
-    tmdbData.name ?? '';
+    title = tmdbData?.name ?? '';
     episodePicker = '<opcor-episode-picker></opcor-episode-picker>';
   }
 
@@ -93,6 +92,7 @@ function playerPage(tmdbData: TmdbResult, isMovie: boolean) {
     html`
       <script>
       window.streamingHost = '${streamingHost}';
+      window.tmdbId = ${id};
       window.tmdbData = ${JSON.stringify(tmdbData)};
       </script>
       <iframe
@@ -252,8 +252,14 @@ async function tmdbFetch(
   };
 
   const response = await fetch(url, { headers: allHeaders });
-  const data = await response.json();
-  return data;
+  console.log('got response');
+  try {
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.error(`Failed to load or parse the response from /${path}\n${e}`);
+    return null;
+  }
 }
 
 function buildUrl(
