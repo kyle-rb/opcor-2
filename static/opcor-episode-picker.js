@@ -67,7 +67,7 @@ class OpcorEpisodePicker extends LitElement {
     }
 
     this.seasonsByNumber = {};
-    for (const season of tmdbData.seasons) {
+    for (const season of this.tmdbData.seasons) {
       if (season.season_number !== 0) {
         this.seasonsByNumber[season.season_number] = season;
       }
